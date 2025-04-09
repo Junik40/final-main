@@ -1,0 +1,34 @@
+name: Go
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-go@v4
+
+    - name: Build
+      run: go build -v ./...
+
+  tests:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-go@v4
+
+    - name: Test
+      run: go test -v ./...
+  
+  lint:
+    needs: tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v4
+      - uses: golangci/golangci-lint-action@v3 
