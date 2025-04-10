@@ -52,10 +52,10 @@ func TestAddGetDelete(t *testing.T) {
 	require.Equal(t, parcel, stored)
 
 	// delete
-	err = store.Delete(parcel.Number)
-
-	stored, err = store.Get(parcel.Number)
-	require.Equal(t, sql.ErrNoRows, err)
+	err = store.Delete(parcelNumber)
+	require	.NoError(t, err)
+	_, err = store.Get(parcelNumber)
+	assert.Error(t, err)
 }
 
 // TestSetAddress проверяет обновление адреса
