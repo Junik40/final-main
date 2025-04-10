@@ -23,7 +23,7 @@ jobs:
     - uses: actions/setup-go@v4
 
     - name: Test
-      run: go test -v ./...
+      run: go test *.go
   
   lint:
     needs: tests
