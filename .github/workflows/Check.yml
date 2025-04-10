@@ -11,27 +11,11 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-go@v4
-
-    - name: Build
-      run: go build -v ./...
-
-  tests:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-go@v4
-
-    - name: Test
-      run: go test *.go
-  
-  lint:
-    needs: tests
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-go@v4
     - name: golangci-lint
       uses: golangci/golangci-lint-action@v3
       with:
         skip-cache: true
+    - name: Build
+      run: go build -v ./...
+    - name: Test
+      run: go test *.go
