@@ -32,34 +32,32 @@ func getTestParcel() Parcel {
 func TestAddGetDelete(t *testing.T) {
 	// prepare
 	db, err := sql.Open("sqlite", "tracker.db")
-	require.NoError(t, err)
+	if err != nil {
+		require.NoError(t, err)
+	}
 	defer db.Close()
-
-	// настройте подключение к БД
 	store := NewParcelStore(db)
 	parcel := getTestParcel()
 
 	// add
-	// добавьте новую посылку в БД, убедитесь в отсутствии ошибки и наличии идентификатора
-	parcelNumber , err := store.Add(parcel)
+	parcel.Number, err = store.Add(parcel)
+
 	require.NoError(t, err)
-	assert.GreaterOrEqual(t, parcelNumber,0)
+	require.NotEmpty(t, parcel.Number)
 
 	// get
-	// получите только что добавленную посылку, убедитесь в отсутствии ошибки
-	// проверьте, что значения всех полей в полученном объекте совпадают со значениями полей в переменной parcel
-	parcel.Number = parcelNumber
-	testPar,err := store.Get(parcelNumber)
+	stored, err := store.Get(parcel.Number)
+
 	require.NoError(t, err)
-	assert.Equal(t, parcel, testPar)
+	require.Equal(t, parcel, stored)
 
 	// delete
-	// удалите добавленную посылку, убедитесь в отсутствии ошибки
-	// проверьте, что посылку больше нельзя получить из БД
-	err = store.Delete(parcelNumber)
-	require	.NoError(t, err)
-	_, err = store.Get(parcelNumber)
-	assert.Error(t, err)
+	err = store.Delete(parcel.Number)
+	if err != nil {
+		require.NoError(t, err)
+	}
+	_, err = store.Get(parcel.Number)
+	require.Equal(t, sql.ErrNoRows, err)
 }
 
 // TestSetAddress проверяет обновление адреса
