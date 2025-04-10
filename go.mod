@@ -1,4 +1,4 @@
-module main
+module maina
 
 go 1.24.1
 
